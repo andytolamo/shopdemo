@@ -28,7 +28,7 @@ CREATE TABLE `description` (
 
 CREATE TABLE `images` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `url` varchar(45) DEFAULT NULL,
+  `url` TEXT DEFAULT NULL,
   `sku_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_images_1_idx` (`sku_id`),

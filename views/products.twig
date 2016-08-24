@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+
+<head>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap-theme.min.css">
+        <style>
+
+            .core {
+                border: 1px solid black;
+                min-width: 300px;
+                min-height: 300px;
+                max-height: 1500px;
+            }
+        </style>
+</head>
+<body>
+
+
+
+
+
+
+{% for product_row in products|batch(4) %}
+<div class="row">
+    {% for product in product_row %}
+        <div class="core">
+            <div class="col-sm-3">
+                <img src="{{ product.image|e}}">
+            </div>
+            <div class="col-sm-2">
+
+                <B>Name:</B>&nbsp{{ product.sku_name|e }}
+                <BR>
+                <B>Price:&nbsp;</B>{{ product.price|e }}&nbsp;EUR.&nbsp;<BR><B>Tax</B>&nbsp;{{ product.tax_percentage|e  }}%<BR><B>Weight:</B>&nbsp;{{ product.weight|e }} kg
+                <BR>
+                <B>Country of Origin:</B>&nbsp;{{ product.country_of_origin|e }}
+                <BR>
+                <B>Quantity:</B>&nbsp;{{ product.quantity|e }}
+                <BR>
+            </div>
+
+
+            <div class="col-sm-1">
+                <B>DESCRIPTION</B>
+                <BR>
+                {{ product.description|e }}
+            </div>
+
+
+
+        </div>
+    {% endfor %}
+</div>
+{% endfor %}
+
+
