@@ -44,14 +44,14 @@ function addToDB($array)
     try {
         $pdo->beginTransaction(); //start transaction: either everything goes or nothing
         $tax_category = saveTax($pdo, $array);
-        echo "tax_id: $tax_category";
         $sku_id = saveSku($pdo, $array, $tax_category);
-        echo "\n sku_id is:" . $sku_id;
+
         saveImage($pdo, $array, $sku_id);
         savePrice($pdo, $array, $sku_id);
         saveDescription($pdo, $array, $sku_id);
         $pdo->commit();  // end transaction
-
+        echo "\nimport done";
+git
 
     } catch (Exception $ex) {
         //note error handling actually does not work well with PDO and exceptions. Silent errors with failed arguments.
