@@ -1,10 +1,12 @@
 <?php
 
+
 //NOTE: this is one way insert. It does not take account existing data but insetts again data even if already exists
 //too lazy to write for this test the check but note that is known issue.
 
 try {
     $path = getPath();
+
     $data = file_get_contents($path);;
     $row = preg_split("/\\r\\n|\\r|\\n/", $data);
 
@@ -12,54 +14,62 @@ try {
         throw new Exception('Problem in data. No rows in file');
     }
 
-    //delete first row of headers
-    unset($row[0]);
 
+    unset($row[0]);//delete first row of headers
+
+    $settingspath = getSettingsPath();
+    require($settingspath);
+
+    //create connection
+    $pdo = new PDO(
+        "mysql:host=$db_host;dbname=shop",
+        $db_user,
+        $db_passwd
+    );
+
+    $pdo->beginTransaction(); //start transaction: either everything goes or nothing
     foreach ($row as $arow) {
         $array = str_getcsv($arow, ',');
         if (!is_array($array)) {
             throw new Exception('Problem in data. Cant parse csv row:' . $arow);
         }
-        checkRow($array);
+        checkRow($array, $pdo);
         #       var_dump($array);
-        addToDB($array);
+        addToDB($array, $pdo);
+
 
     }
+    $pdo->commit();  // end transaction
+    echo "\nimport done";
+
 
 
 } catch (Exception $e) {
-
+    $pdo->rollBack(); // in case of error, lets rollback all queries
     echo "\nError: " . $e->getMessage() . "\n";
 }
 
 
-function addToDB($array)
+function addToDB($array, $pdo)
 {
-    $pdo = new PDO(
-        'mysql:host=127.0.0.1;dbname=shop',
-        'cgi',
-        'ecommerce'
-    );
 
     try {
-        $pdo->beginTransaction(); //start transaction: either everything goes or nothing
         $tax_category = saveTax($pdo, $array);
         $sku_id = saveSku($pdo, $array, $tax_category);
 
         saveImage($pdo, $array, $sku_id);
         savePrice($pdo, $array, $sku_id);
         saveDescription($pdo, $array, $sku_id);
-        $pdo->commit();  // end transaction
-        echo "\nimport done";
-git
+
 
     } catch (Exception $ex) {
-        //note error handling actually does not work well with PDO and exceptions. Silent errors with failed arguments.
-        //wont fix for this project but note this
+        //note error handling actually does not work well with PDO and exceptions. Silent insert fails with
+        // incorrect or missing arguments.
+        //wont fix for this project but note this in case something odd happens
 
-        $pdo->rollBack(); // in case of error, lets rollback all queries
         throw new Exception('Query error: ' . $ex->getMessage());
     }
+
 
 }
 
@@ -90,6 +100,22 @@ function getPath()
     }
 
     $path .= '/sample-data.csv';
+    return $path;
+}
+
+/**
+ * get path to read/execute
+ *
+ * @return string
+ */
+function getSettingsPath()
+{
+    $path = getcwd();
+    if (strpos($path, 'scripts')) {
+        $path = str_replace('/scripts', '', $path);
+    }
+
+    $path .= '/settings/settings.php';
     return $path;
 }
 
@@ -180,7 +206,7 @@ function saveTax($pdo, $row)
  * @param $sku_id
  * @return bool
  */
-function saveImage($pdo,  $row, $sku_id)
+function saveImage($pdo, $row, $sku_id)
 {
     $url = $row[4];
     try {
@@ -226,7 +252,7 @@ function saveDescription($pdo, $row, $sku_id)
 function savePrice($pdo, $row, $sku_id)
 {
 
-    $price =  $row[1] * 100;  //price in cents
+    $price = $row[1] * 100;  //price in cents
     $currency = 'EUR';
 
     try {
