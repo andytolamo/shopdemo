@@ -1,7 +1,6 @@
 {
     "require": {
-        "silex/silex": "~2.0",
-        "doctrine/orm": "v2.5.4"
+        "silex/silex": "~2.0"
 
     }
 }
