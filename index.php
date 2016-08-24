@@ -94,8 +94,6 @@ function getAllSku($pdo)
 
             array_push($finalResult, $row);
         }
-
-
     } catch (Exception $e) {
         throw new Exception($e->getMessage());
     }
@@ -105,7 +103,7 @@ function getAllSku($pdo)
 }
 
 /**
- * return tax rate
+ * return tax rate in default location to be shipped
  *
  * @param $pdo
  * @param $category_id
@@ -118,8 +116,6 @@ function getTaxRate($pdo, $category_id)
         foreach ($pdo->query("SELECT percentage FROM tax WHERE tax_category = '$category_id' AND  destination_location = 'default'") as $row) {
             return $row['percentage'];
         }
-
-
     } catch (Exception $e) {
         throw new Exception($e->getMessage());
     }
@@ -128,7 +124,7 @@ function getTaxRate($pdo, $category_id)
 }
 
 /**
- * gets price in Euros
+ * gets price in euros
  *
  * @param $pdo
  * @param $sku_id
@@ -146,7 +142,6 @@ function getPrice($pdo, $sku_id)
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-
         return false;
     }
 }
@@ -169,7 +164,6 @@ function getImage($pdo, $sku_id)
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-
         return false;
     }
 }
@@ -193,7 +187,6 @@ function getDescription($pdo, $sku_id)
         } catch (Exception $e) {
             throw new Exception($e->getMessage());
         }
-
         return false;
     }
 }
