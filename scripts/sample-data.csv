@@ -1,0 +1,5 @@
+sku,price,created_at,description,image,country_of_manufacture,name,weight,qty,tax
+magento-1,29,8/15/16 0:00,"description for product one",https://kuvat.suomalainen.com/booksearch/productimages/97/89/52/0114473_2.jpgx,Finland,product one,0.5,99,14%
+magento-2,18,8/15/16 0:00,"description for product two",https://kuvat.suomalainen.com/booksearch/productimages/97/89/51/2403837_2.jpgx,Sweden,product two,2,14,24%
+magento-3,89,8/15/16 0:00,"description for product three",https://kuvat.suomalainen.com/booksearch/productimages/97/81/78/5887062_2.jpgx,Denmark,product three,3,28,14%
+magento-4,56,8/15/16 0:00,"description for product four",https://kuvat.suomalainen.com/booksearch/productimages/97/80/78/5198055_2.jpgx,Norway,product four,4,12,24%
